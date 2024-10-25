@@ -44,14 +44,19 @@ def get_pdf_text(pdf_docs):
     return text
 
 def get_chunks(text):
-    text_splitter = RecursiveCharacterTextSplitter(chunk_size=2000, chunk_overlap=200)
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
     chunks = text_splitter.split_text(text)
     return chunks
 
 def get_vector_store(text_chunks):
+    if os.path.exists("faiss_index"):
+        print("Reusing existing FAISS index.")
+        return  # Skip if index already exists
+    
     embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2", model_kwargs={'device': "cpu"})
     vector_store = FAISS.from_texts(text_chunks, embedding=embeddings)
     vector_store.save_local("faiss_index")
+
 
 def conv_chain():
     prompt_template = """ 
@@ -145,7 +150,7 @@ def video_recommendation(user_question):
             "video_id": video["video_id"],
             "thumbnail_url": f"https://img.youtube.com/vi/{video['video_id']}/hqdefault.jpg"
         }
-        for video in sorted_videos[:8]  # Return top 8 videos
+        for video in sorted_videos[:5]  # Return top 8 videos
     ]
     
     return video_info  # Return list of video info
