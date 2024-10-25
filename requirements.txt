@@ -1,0 +1,13 @@
+Flask
+PyPDF2
+langchain
+langchain_huggingface
+langchain_groq
+langchain_community
+requests
+beautifulsoup4
+youtube-transcript-api
+reportlab
+python-dotenv
+faiss-cpu
+gunicorn

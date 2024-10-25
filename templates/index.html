@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocDynamo - OpenRAG</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@200;400;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap" rel="stylesheet">
+
+
+</head>
+<body>
+    <div class="layout">
+        <!-- Sidebar for Uploading Documents -->
+        <aside class="sidebar">
+            <h2>Upload Documents</h2>
+            <form id="pdf-form" method="POST" enctype="multipart/form-data">
+                <div class="input-group">
+                    <label for="pdf-files" class="label"></label>
+
+                    <div class="drag-and-drop-area">
+                    <input type="file" id="pdf-files" name="pdf_docs" multiple required class="file-input">
+                    <label for="pdf-files" class="custom-file-upload">Choose File 📂</label>
+                    <p>Upload your mulitple files (max 5) </p>
+                    </div>
+                    <button type="submit" class="btn submit-btn">Submit & Process</button>
+                </div>
+            </form>
+            <form action="/start_over" method="POST">
+            </form>
+            
+            <div id="uploaded-filenames" class="uploaded-filenames">
+                <h3>Uploaded Files:</h3>
+                <ul id="filename-list">
+                    {% if uploaded_filenames %}
+                        {% for filename in uploaded_filenames %}
+                            <li>{{ filename }}</li>
+                        {% endfor %}
+                    {% else %}
+                        <li>No files uploaded.</li>
+                    {% endif %}
+                </ul>
+            </div>
+            
+            
+            <footer class="sidebar-footer">
+                <form action="/start_over" method="POST">
+                    <button type="submit" class="start-over-btn">🔄 Start Over</button>
+                </form>
+            </footer>
+        </aside>
+
+        <!-- Main Section for Asking Questions -->
+        <main class="main-content">
+            <header>
+                <h1><span class="highlight-border">DocDynamo</span><span class="highlight"> - Streamline Your PDF Insights</span></h1>
+                <p class="subheading">Upload your PDFs on the left and ask questions here.</p>
+                <hr class="footer-divider-h">
+            </header>
+            
+
+            <div class="hello-user">
+                <h2>Hello there !</h2>
+                <p>Your ultimate hub for transforming PDFs into dynamic knowledge sources!</p>
+            </div>
+    
+    
+
+            <section class="response-section">
+                {% if response %}
+                <h2>Response:</h2>
+                <p>{{ response }}</p>
+                {% endif %}
+            </section>
+
+
+
+            <section class="question-section">
+                <form id="question-form" method="POST">
+                    <div class="input-group">
+                    
+                        <input type="text" id="question" name="question" placeholder="Type your question here..." required>
+                        <button type="submit" class="btn ask-btn">Submit</button>
+                    </div>
+                </form>
+            </section>
+
+            {% if recommendations %}
+            <section class="recommendations-section">
+                <h2>Recommended Videos:</h2>
+                <ul>
+                    {% for video in recommendations %}
+                    <li>
+                        <a href="https://www.youtube.com/watch?v={{ video.video_id }}" target="_blank">
+                            <img src="{{ video.thumbnail_url }}" alt="Thumbnail for {{ video.video_id }}" class="video-thumbnail" loading="lazy">
+                        </a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </section>
+            {% endif %}
+
+            {% if suggested_questions %}
+<section class="suggested-questions-section">
+    <input type="checkbox" id="toggle-questions" class="toggle-checkbox">
+    <label for="toggle-questions" class="toggle-questions-btn">Show Frequently Asked Questions</label>
+    <div class="questions-container">
+        {% for question in suggested_questions %}
+        <form method="POST" class="question-button-form">
+            <input type="hidden" name="question" value="{{ question }}">
+            <button type="submit" class="question-button">{{ question }}</button>
+        </form>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+
+            <footer>
+            <hr width="100%" size="2" class="footer-divider">
+                <div class="social-links">
+                    <a href="https://www.instagram.com/open.rag?igsh=MWRvMmpmMDJ0Ym94NA==" target="_blank" class="social-icon">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/company/openrag1/posts/?feedView=all" target="_blank" class="social-icon">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="mailto:openrag189@gmail.com" class="social-icon">
+                        <i class="fas fa-envelope"></i>
+                    </a>
+                </div>
+                <br>
+                <p>Powered by <strong>OpenRAG</strong> | © 2024</p>
+            </footer>
+        </main>
+    </div>
+</body>
+</html>
